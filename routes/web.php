@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\categoriaController;
+use App\Http\Controllers\presentacionesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,9 +21,13 @@ Route::get('/', function () {
 
 Route::view('/panel', 'panel.index')->name('panel');
 
-
-
+// CATEGORIAS
 Route::resource('categorias', categoriaController::class);
+
+// PRESENTACIONES
+Route::resource('presentaciones', presentacionesController::class);
+
+
 
 Route::get('/login', function() {
     return view('auth.login');
