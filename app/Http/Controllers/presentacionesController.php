@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePresentacionesRequest;
+use App\Http\Requests\UpdatePresentacionesRequest;
 use App\Models\Caracteristica;
 use App\Models\Presentacione;
 use Exception;
@@ -65,15 +66,19 @@ class presentacionesController extends Controller
      */
     public function edit(Presentacione $presentacione)
     {
-        dd($presentacione);
+        // dd($presentacione);
+        return view('presentaciones.edit',['presentacione' => $presentacione]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdatePresentacionesRequest $request, Presentacione $presentacione)
     {
-        //
+        Caracteristica::where('id', $presentacione->caracteristica->id)
+        ->update($request->validated());
+
+        return redirect()->route('presentaciones.index')->with('success', 'Presentación editada');
     }
 
     /**
@@ -81,6 +86,23 @@ class presentacionesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $mensaje = '';
+        $presentacion = Presentacione::find($id);
+
+        if($presentacion->caracteristica->estado == 1){
+            Caracteristica::where('id', $presentacion->caracteristica->id)
+            ->update([
+                'estado' => 0
+            ]);
+            $mensaje = 'Presentación eliminada';
+        }else{
+            Caracteristica::where('id', $presentacion->caracteristica->id)
+            ->update([
+                'estado' => 1
+            ]);
+            $mensaje = 'Presentación restaurada';
+        }
+
+        return redirect()->route('presentaciones.index')->with('success', $mensaje);
     }
 }

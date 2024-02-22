@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\categoriaController;
+use App\Http\Controllers\marcasController;
 use App\Http\Controllers\presentacionesController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,8 @@ Route::resource('categorias', categoriaController::class);
 // PRESENTACIONES
 Route::resource('presentaciones', presentacionesController::class);
 
+// MARCAS
+Route::resource('marcas', marcasController::class);
 
 
 Route::get('/login', function() {

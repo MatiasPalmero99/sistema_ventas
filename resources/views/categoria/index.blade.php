@@ -68,7 +68,7 @@
                     <tbody>
                         @foreach ($categorias as $categoria)
                             <tr>
-                                <td>{{ $categoria->caracteristica->id }}</td>
+                                <td>{{ $categoria->id }}</td>
                                 <td>{{ $categoria->caracteristica->nombre }}</td>
                                 <td>{{ $categoria->caracteristica->descripcion }}</td>
                                 <td>
@@ -79,7 +79,7 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <form class="d-inline" action="{{ route('categorias.edit', ['categoria' => $categoria]) }}">
+                                    <form class="d-inline" action="{{ route('categorias.edit', ['categoria' => $categoria]) }}" method="GET">
                                         <button type="submit" class="text-success mx-1" style="border:none; background-color:transparent;" title="Editar">
                                             <i class="fa-regular fa-pen-to-square"></i>
                                         </button>

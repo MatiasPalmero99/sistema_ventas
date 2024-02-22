@@ -36,14 +36,14 @@
 @endif
 
     <div class="container-fluid px-4">
-        <h1 class="mt-4 text-center">Presentaciones</h1>
+        <h1 class="mt-4 text-center">Marcas</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item"><a href="{{ route('panel') }}">Inicio</a></li>
-            <li class="breadcrumb-item active">Presentaciones</li>
+            <li class="breadcrumb-item active">Marcas</li>
         </ol>
 
         <div class="mb-4">
-            <a href="{{ route('presentaciones.create') }}">
+            <a href="{{ route('marcas.create') }}">
                 <button type="button" class="btn btn-primary">Añadir nuevo registro</button>
             </a>
         </div>
@@ -66,31 +66,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($presentaciones as $presentacion)
+                        @foreach ($marcas as $marca)
                             <tr>
-                                <td>{{ $presentacion->id }}</td>
-                                <td>{{ $presentacion->caracteristica->nombre }}</td>
-                                <td>{{ $presentacion->caracteristica->descripcion }}</td>
+                                <td>{{ $marca->id }}</td>
+                                <td>{{ $marca->caracteristica->nombre }}</td>
+                                <td>{{ $marca->caracteristica->descripcion }}</td>
                                 <td>
-                                    @if ($presentacion->caracteristica->estado == 1)
+                                    @if ($marca->caracteristica->estado == 1)
                                         <span class="fw-bolder rounded bg-success text-white p-1">Activo</span>
                                     @else
                                         <span class="fw-bolder rounded bg-danger text-white p-1">Eliminado</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <form class="d-inline" action="{{ route('presentaciones.edit', ['presentacione' => $presentacion]) }}" method="GET">
+                                    <form class="d-inline" action="{{ route('marcas.edit', ['marca' => $marca]) }}" method="GET">
                                         <button type="submit" class="text-success mx-1" style="border:none; background-color:transparent;" title="Editar">
                                             <i class="fa-regular fa-pen-to-square"></i>
                                         </button>
                                     </form>
 
-                                    @if ($presentacion->caracteristica->estado == 1)
-                                        <button type="button" class="text-danger mx-1" style="border:none; background-color:transparent;" title="Borrar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$presentacion->id}}">
+                                    @if ($marca->caracteristica->estado == 1)
+                                        <button type="button" class="text-danger mx-1" style="border:none; background-color:transparent;" title="Borrar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$marca->id}}">
                                             <i class="fa-solid fa-trash-can"></i>
                                         </button>
                                     @else
-                                        <button type="button" class="text-success mx-1" style="border:none; background-color:transparent;" title="Restaurar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$presentacion->id}}">
+                                        <button type="button" class="text-success mx-1" style="border:none; background-color:transparent;" title="Restaurar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$marca->id}}">
                                             <i class="fa-solid fa-trash-can-arrow-up"></i>
                                         </button>
                                     @endif
@@ -100,7 +100,7 @@
 
 
                             <!-- Modal -->
-                            <div class="modal fade" id="confirmModal-{{$presentacion->id}}" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="confirmModal-{{$marca->id}}" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -108,11 +108,11 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        {{ $presentacion->caracteristica->estado ==1 ? '¿Seguro deseas eliminar esta presentación?' : '¿Seguro deseas restaurar esta presentación?'}}
+                                        {{ $marca->caracteristica->estado ==1 ? '¿Seguro deseas eliminar esta marca?' : '¿Seguro deseas restaurar esta marca?'}}
                                     </div>
                                     <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <form action="{{ route('presentaciones.destroy', ['presentacione' => $presentacion->id]) }}" method="POST">
+                                    <form action="{{ route('marcas.destroy', ['marca' => $marca->id]) }}" method="POST">
                                         @method('DELETE')
                                         @csrf
                                         <button type="submit" class="btn btn-primary">Confirmar</button>
