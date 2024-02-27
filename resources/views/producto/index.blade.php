@@ -1,7 +1,7 @@
 @extends('template')
 
-@section('title', 'presentaciones')
-
+@section('title', 'Productos')
+    
 @push('css')
     {{-- SWEET ALERT 2 --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -14,37 +14,37 @@
 
 @section('content')
 
-@if(session('success'))
-    <script>
-        let message = '{{ session('success') }}';
-        const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-            }
-        });
-            Toast.fire({
-            icon: "success",
-            title: message
-        });
-    </script>
-@endif
+    @if(session('success'))
+        <script>
+            let message = '{{ session('success') }}';
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+                Toast.fire({
+                icon: "success",
+                title: message
+            });
+        </script>
+    @endif
 
     <div class="container-fluid px-4">
-        <h1 class="mt-4 text-center">Presentaciones</h1>
+        <h1 class="mt-4 text-center">Productos</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item"><a href="{{ route('panel') }}">Inicio</a></li>
-            <li class="breadcrumb-item active">Presentaciones</li>
+            <li class="breadcrumb-item active">Productos</li>
         </ol>
 
         <div class="mb-4">
-            <a href="{{ route('presentaciones.create') }}">
-                <button type="button" class="btn btn-primary">Añadir nuevo registro</button>
+            <a href="{{ route('productos.create') }}">
+                <button type="button" class="btn btn-primary">Añadir nuevo producto</button>
             </a>
         </div>
 
@@ -52,7 +52,7 @@
         <div class="card mb-4">
             <div class="card-header">
                 <i class="fas fa-table me-1"></i>
-                Tabla Presentaciones
+                Tabla Productos
             </div>
             <div class="card-body">
                 <table id="example" class="table table-light table-striped" style="width:100%">
@@ -66,7 +66,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($presentaciones as $presentacion)
+                        {{-- @foreach ($presentaciones as $presentacion)
                             <tr>
                                 <td>{{ $presentacion->id }}</td>
                                 <td>{{ $presentacion->caracteristica->nombre }}</td>
@@ -96,11 +96,11 @@
                                     @endif
 
                                 </td>
-                            </tr>
+                            </tr> --}}
 
 
                             <!-- Modal -->
-                            <div class="modal fade" id="confirmModal-{{$presentacion->id}}" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                            {{-- <div class="modal fade" id="confirmModal-{{$presentacion->id}}" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -120,13 +120,14 @@
                                     </div>
                                 </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            </div> --}}
+                        {{-- @endforeach --}}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
     
 @endsection
 

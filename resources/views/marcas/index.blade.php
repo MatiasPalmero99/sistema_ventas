@@ -135,22 +135,5 @@
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
-    <script>
-        // new DataTable('#example');
-        new DataTable('#example', {
-            language: {
-                info: 'Mostrar página _PAGE_ de _PAGES_',
-                infoEmpty: 'No hay registros disponibles',
-                infoFiltered: '(filtrado de _MAX_ registros totales)',
-                lengthMenu: 'Mostrar _MENU_ registros por página',
-                zeroRecords: 'No se encontró nada - Lo siento',
-                search: 'Buscar:',
-                paginate: {
-                    next:'Siguiente',
-                    previous:'Anterior'
-                }
-            },
-            order: []
-        });
-    </script>
+    <script src="{{ asset('js/lang_datatable.js')}}"></script>
 @endpush
