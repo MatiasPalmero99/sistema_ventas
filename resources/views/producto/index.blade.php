@@ -54,53 +54,109 @@
                 <i class="fas fa-table me-1"></i>
                 Tabla Productos
             </div>
-            <div class="card-body">
+            <div class="card-body table-responsive">
                 <table id="example" class="table table-light table-striped" style="width:100%">
                     <thead class="table-dark">
                         <tr>
                             <th>#</th>
+                            <th>Código</th>
                             <th>Nombre</th>
                             <th>Descripción</th>
+                            <th>Marca</th>
+                            <th>Presentación</th>
+                            <th>Categorías</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- @foreach ($presentaciones as $presentacion)
+                        @foreach ($productos as $item)
                             <tr>
-                                <td>{{ $presentacion->id }}</td>
-                                <td>{{ $presentacion->caracteristica->nombre }}</td>
-                                <td>{{ $presentacion->caracteristica->descripcion }}</td>
+                                <td>{{ $item->id }}</td>
+                                <td>{{ $item->codigo }}</td>
+                                <td>{{ $item->nombre }}</td>
+                                <td>{{ $item->descripcion }}</td>
+                                <td>{{ $item->marca->caracteristica->nombre }}</td>
+                                <td>{{ $item->presentacione->caracteristica->nombre }}</td>
                                 <td>
-                                    @if ($presentacion->caracteristica->estado == 1)
+                                    @foreach ($item->categorias as $category)
+                                        <div class="container">
+                                            <div class="row">
+                                                <span class="m-1 rounded-pill p-1 bg-secondary text-white text-center">{{ $category->caracteristica->nombre }}</span>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </td>
+                                <td class="text-center">
+                                    @if ($item->estado == 1)
                                         <span class="fw-bolder rounded bg-success text-white p-1">Activo</span>
                                     @else
                                         <span class="fw-bolder rounded bg-danger text-white p-1">Eliminado</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <form class="d-inline" action="{{ route('presentaciones.edit', ['presentacione' => $presentacion]) }}" method="GET">
+                                    <button type="button" class="text-info mx-1" style="border:none; background-color:transparent;" title="Ver detalle"  data-bs-toggle="modal" data-bs-target="#verModal-{{$item->id}}">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+
+                                    <form class="d-inline" action="{{ route('productos.edit', ['producto' => $item]) }}" method="GET">
                                         <button type="submit" class="text-success mx-1" style="border:none; background-color:transparent;" title="Editar">
                                             <i class="fa-regular fa-pen-to-square"></i>
                                         </button>
                                     </form>
 
-                                    @if ($presentacion->caracteristica->estado == 1)
-                                        <button type="button" class="text-danger mx-1" style="border:none; background-color:transparent;" title="Borrar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$presentacion->id}}">
+                                    @if ($item->estado == 1)
+                                        <button type="button" class="text-danger mx-1" style="border:none; background-color:transparent;" title="Borrar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
                                             <i class="fa-solid fa-trash-can"></i>
                                         </button>
                                     @else
-                                        <button type="button" class="text-success mx-1" style="border:none; background-color:transparent;" title="Restaurar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$presentacion->id}}">
+                                        <button type="button" class="text-success mx-1" style="border:none; background-color:transparent;" title="Restaurar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
                                             <i class="fa-solid fa-trash-can-arrow-up"></i>
                                         </button>
                                     @endif
 
                                 </td>
-                            </tr> --}}
+                            </tr>
+
+                            <!-- Modal VER DETALLE -->
+                            <div class="modal fade" id="verModal-{{$item->id}}" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="confirmModalLabel">Detalles del producto</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row mb-3">
+                                            <label><span class="fw-bolder">Descripción: </span> {{ $item->descripcion }}</label>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label><span class="fw-bolder">Fecha de vencimiento: </span> {{ $item->fecha_vencimiento=='' ? 'No tiene.' : $item->fecha_vencimiento }}</label>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label><span class="fw-bolder">Stock: </span>{{ $item->stock }}</label>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label><span class="fw-bolder">Imagen: </span></label>
+                                            <div>
+                                                @if ($item->img_path != null)
+                                                    <img src="{{ Storage::url('public/productos/'.$item->img_path) }}" alt="{{ $item->nombre}}" class="img-fluid img-thumbnail border-4 rounded">
+                                                @else
+                                                    <img src="" alt="{{ $item->nombre}}" class="">
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
 
 
-                            <!-- Modal -->
-                            {{-- <div class="modal fade" id="confirmModal-{{$presentacion->id}}" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                            <!-- Modal DELETE -->
+                            <div class="modal fade" id="confirmModal-{{$item->id}}" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -108,11 +164,11 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        {{ $presentacion->caracteristica->estado ==1 ? '¿Seguro deseas eliminar esta presentación?' : '¿Seguro deseas restaurar esta presentación?'}}
+                                        {{ $item->estado ==1 ? '¿Seguro deseas eliminar este producto?' : '¿Seguro deseas restaurar este producto?'}}
                                     </div>
                                     <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <form action="{{ route('presentaciones.destroy', ['presentacione' => $presentacion->id]) }}" method="POST">
+                                    <form action="{{ route('productos.destroy', ['producto' => $item->id]) }}" method="POST">
                                         @method('DELETE')
                                         @csrf
                                         <button type="submit" class="btn btn-primary">Confirmar</button>
@@ -120,8 +176,8 @@
                                     </div>
                                 </div>
                                 </div>
-                            </div> --}}
-                        {{-- @endforeach --}}
+                            </div>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -136,5 +192,33 @@
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
-    <script src="{{ asset('js/lang_datatable.js')}}"></script>
+    <script>
+        // new DataTable('#example');
+        new DataTable('#example', {
+            language: {
+                info: 'Mostrar página _PAGE_ de _PAGES_',
+                infoEmpty: 'No hay registros disponibles',
+                infoFiltered: '(filtrado de _MAX_ registros totales)',
+                lengthMenu: 'Mostrar _MENU_ registros por página',
+                zeroRecords: 'No se encontró nada - Lo siento',
+                search: 'Buscar:',
+                paginate: {
+                    next:'Siguiente',
+                    previous:'Anterior'
+                }
+            },
+            order: [],
+            // columns: [
+            //     null,
+            //     { orderSequence: ['desc', 'asc', ''] },
+            //     { orderSequence: ['desc', 'asc', ''] },
+            //     { orderSequence: null },
+            //     { orderSequence: null },
+            //     { orderSequence: null },
+            //     { orderSequence: null },
+            //     { orderSequence: null },
+            //     { orderSequence: null }
+            // ]
+        });
+    </script>
 @endpush

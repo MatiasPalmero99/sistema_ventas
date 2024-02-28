@@ -12,5 +12,13 @@ new DataTable('#example', {
             previous:'Anterior'
         }
     },
-    order: []
+    order: [],
+    // columns: [
+    //     null,
+    //     { orderSequence: ['desc', 'asc', ''] },
+    //     { orderSequence: ['desc', 'asc', ''] },
+    //     { orderSequence: null },
+    //     { orderSequence: null }
+
+    // ]
 });
