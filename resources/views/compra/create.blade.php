@@ -3,6 +3,9 @@
 @section('title', 'Crear Compra')
 
 @push('css')
+    {{-- SWEET ALERT 2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     {{-- Bootstrap Select --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
@@ -104,22 +107,29 @@
                                             <tfoot>
                                                 <tr>
                                                     <th></th>
-                                                    <th>Sumas</th>
-                                                    <th><span id="sumas">0</span></th>
+                                                    <th colspan="4">Sumas</th>
+                                                    <th colspan="2"><span id="sumas">0</span></th>
                                                 </tr>
                                                 <tr>
                                                     <th></th>
-                                                    <th>IVA %</th>
-                                                    <th><span id="iva">0</span></th>
+                                                    <th colspan="4">IVA %</th>
+                                                    <th colspan="2"><span id="iva">0</span></th>
                                                 </tr>
                                                 <tr>
                                                     <th></th>
-                                                    <th>Total</th>
-                                                    <th><span id="total">0</span></th>
+                                                    <th colspan="4">Total</th>
+                                                    <th colspan="2"><span id="total">0</span></th>
                                                 </tr>
                                             </tfoot>
                                         </table>
                                     </div>
+                                </div>
+
+                                {{-- Boton para cancelar compra --}}
+                                <div class="col-md-12 mb-2">
+                                    <button type="button" id="cancelar" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        Cancelar compra
+                                      </button>
                                 </div>
 
                             </div>
@@ -188,14 +198,11 @@
 
                                 {{-- Botones --}}
                                 <div class="col-md-12 my-3 text-center">
-                                    <button type="submit" class="btn btn-success">Guardar</button>
+                                    <button type="submit" class="btn btn-success" id="guardar">Guardar</button>
                                 </div>
 
                             </div>
                         </div>
-
-
-
                         {{-- <div class="col-12 col-md-6 mb-4">
                             <label for="documento_id" class="form-label">Tipo de documento:</label>
                             <select name="documento_id" id="documento_id" class="form-select">
@@ -210,9 +217,25 @@
                         </div> --}}
                     </div>
                 </div>
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary" id="Cargar" name="Cargar" title="Cargar">Cargar datos</button>
-                    <a href="{{ route('clientes.index') }}"><button type="button" class="btn btn-secondary bg-danger text-white" title="Cancelar" data-bs-dismiss="modal">Cerrar</button></a>
+
+
+                <!-- Modal Cancelar Compra -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal de confirmación</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            ¿Seguro que quieres cancelar la compra?
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button id="btn_cancelar_compra" type="button" class="btn btn-danger" data-bs-dismiss="modal">Confirmar</button>
+                        </div>
+                    </div>
+                    </div>
                 </div>
             </form>
         </div>
@@ -232,67 +255,190 @@
     {{-- Eventos --}}
     <script>
         $(document).ready(function () {
-
+            // Boton agregar producto
             $('#btn_agregar').click(function (e) { 
                 agregarProducto();
             });
+
+            // Boton para cancelar compra
+            $('#btn_cancelar_compra').click(function (e) { 
+                cancelarCompra();
+            });
+
+            // Deshabilitar botones si no hay productos cargados
+            disableButtons();
 
             $('#impuesto').val(impuesto + '%');
 
         });
 
-            // Variables
-            let cont = 0;
-            let subtotal = [];
-            let sumas = 0;
-            let iva = 0;
-            let total = 0;
+        // Variables
+        let cont = 0;
+        let subtotal = [];
+        let sumas = 0;
+        let iva = 0;
+        let total = 0;
 
-            // Constantes
-            const impuesto = 21;
+        // Constantes
+        const impuesto = 21;
 
-            function agregarProducto(){
-                let idProducto = $('#producto_id').val();
-                let nameProducto = ($('#producto_id option:selected').text()).split(' - ')[1];
-                let cantidad = $('#cantidad').val();
-                let precioCompra = $('#precio_compra').val();
-                let precioVenta = $('#precio_venta').val();
-
-                // Calcular valores
-                subtotal[cont] = cantidad * precioCompra;
-                sumas+= subtotal[cont];
-                iva = sumas/100 * impuesto;
-                total = sumas + iva;
-                
-
-                let fila = '<tr>' +
-                                '<th>'+ (cont + 1) +'</th>' +
-                                '<td>'+ nameProducto +'</td>' +
-                                '<td>'+ cantidad +'</td>' +
-                                '<td>'+ precioCompra +'</td>' +
-                                '<td>'+ precioVenta +'</td>' +
-                                '<td>'+ subtotal[cont] +'</td>' +
-                                '<td><i class="fa-regular fa-circle-xmark fs-3 text-danger"></i></td>' +
-                            '</tr>';
-
-                $('#tabla_detalle').append(fila);
-                limpiarCampos();
-                cont++;
-
-                // Mostrar los campos calculados
-                $('#sumas').html(sumas);
-                $('#iva').html(iva.toFixed(2));
-                $('#total').html(total);
+        function disableButtons(){
+            if(total == 0){
+                $('#guardar').hide();
+                $('#cancelar').hide();
+            }else{
+                $('#guardar').show();
+                $('#cancelar').show();
             }
+        }
 
-            function limpiarCampos() {
-                let select = $('#producto_id');
-                select.selectpicker();
-                select.selectpicker('val', '');
-                $('#cantidad').val('');
-                $('#precioCompra').val('');
-                $('#precioVenta').val('');
+        function agregarProducto(){
+            let idProducto = $('#producto_id').val();
+            let nameProducto = ($('#producto_id option:selected').text()).split(' - ')[1];
+            let cantidad = $('#cantidad').val();
+            let precioCompra = $('#precio_compra').val();
+            let precioVenta = $('#precio_venta').val();
+
+            // Validaciones
+            // 1-Para que los campos no esten vacios
+            if (nameProducto != '' && cantidad != '' && precioCompra!= '' && precioVenta != '') {
+
+                // 2- Para que los valores ingresados sean los correctos
+                if (parseInt(cantidad) > 0 && (cantidad % 1 == 0) && parseFloat(precioCompra) > 0 && parseFloat(precioVenta) > 0) {
+
+                    // 3- Para que el preci ode compra sea menor que ele precio de venta
+                    if (parseFloat(precioVenta) > parseFloat(precioCompra)) {
+                        // Calcular valores
+                        subtotal[cont] = round(cantidad * precioCompra);
+                        sumas+= subtotal[cont];
+                        iva = round(sumas/100 * impuesto);
+                        total = round(sumas + iva);
+
+                        let fila = '<tr id="fila_'+cont+'">' +
+                                        '<th>'+ (cont + 1) +'</th>' +
+                                        '<td>'+ nameProducto +'</td>' +
+                                        '<td>'+ cantidad +'</td>' +
+                                        '<td>'+ precioCompra +'</td>' +
+                                        '<td>'+ precioVenta +'</td>' +
+                                        '<td>'+ subtotal[cont] +'</td>' +
+                                        '<td><button class="btn btn-danger" type="button" onClick="eliminarProducto('+cont+')"><i class="fa-regular fa-circle-xmark fs-3 text-white"></i></button></td>' +
+                                    '</tr>';
+
+                        // Acciones despues de añadir la fila
+                        $('#tabla_detalle').append(fila);
+                        limpiarCampos();
+                        cont++;
+                        disableButtons();
+
+                        // Mostrar los campos calculados
+                        $('#sumas').html(sumas);
+                        $('#iva').html(iva);
+                        $('#total').html(total);
+
+                        showModal('Producto agregado', 'success');
+                    } else {
+                        showModal('Precio de compra incorrecto', 'error');
+                    }
+                } else {
+                    showModal('Valores incorrectos', 'error');
+                }
+            } else {
+                showModal('Le faltan campos por llenar', 'error');
             }
+        }
+
+        function eliminarProducto(indice){
+            // Calcular valores
+            sumas-= round(subtotal[indice]);
+            iva = round(sumas/100 * impuesto);
+            total = round(sumas + iva);
+
+            // Mostrar los campos calculados
+            $('#sumas').html(sumas);
+            $('#iva').html(iva);
+            $('#total').html(total);
+
+            // Eliminar fila de la tabla
+            $('#fila_'+indice).remove();
+
+            // Actualizar vista de botones
+            disableButtons();
+        }
+
+        function cancelarCompra(){
+            // Eliminar el tbody de la tabla
+            $('#tabla_detalle > tbody').empty();
+
+            // Añadir una nueva fila a la tabla
+            let fila = '<tr>' +
+                            '<th></th>' +
+                            '<td></td>' +
+                            '<td></td>' +
+                            '<td></td>' +
+                            '<td></td>' +
+                            '<td></td>' +
+                            '<td></td>' +
+                        '</tr>';
+            $('#tabla_detalle').append(fila);
+
+            // reiniciar valores de las variables
+            cont = 0;
+            subtotal = [];
+            sumas = 0;
+            iva = 0;
+            total = 0;
+
+            // Mostrar los campos calculados
+            $('#sumas').html(sumas);
+            $('#iva').html(iva);
+            $('#total').html(total);
+
+            limpiarCampos();
+
+            // Actualizar vista de botones
+            disableButtons();
+        }
+
+        function limpiarCampos() {
+            let select = $('#producto_id');
+            select.selectpicker();
+            select.selectpicker('val', '');
+            $('#cantidad').val('');
+            $('#precio_compra').val('');
+            $('#precio_venta').val('');
+        }
+
+        // Redondear con dos decimales
+        function round(num, decimales = 2) {
+            var signo = (num >= 0 ? 1 : -1);
+            num = num * signo;
+            if (decimales === 0) //con 0 decimales
+                return signo * Math.round(num);
+            // round(x * 10 ^ decimales)
+            num = num.toString().split('e');
+            num = Math.round(+(num[0] + 'e' + (num[1] ? (+num[1] + decimales) : decimales)));
+            // x * 10 ^ (-decimales)
+            num = num.toString().split('e');
+            return signo * (num[0] + 'e' + (num[1] ? (+num[1] - decimales) : -decimales));
+        }
         
+        // Alerta de error con mensje personalizado
+        function showModal(message, icon){
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+                Toast.fire({
+                icon: icon,
+                title: message
+            });
+        }
     </script>
 @endpush
