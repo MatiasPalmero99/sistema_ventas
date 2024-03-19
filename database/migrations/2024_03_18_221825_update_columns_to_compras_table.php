@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::withoutForeignKeyConstraints(function () {
+            Schema::dropIfExists('compras');
+        });
         Schema::create('compras', function (Blueprint $table) {
             $table->id();
             $table->dateTime('fecha_hora');
