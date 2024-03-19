@@ -7,6 +7,7 @@ use App\Http\Controllers\marcasController;
 use App\Http\Controllers\presentacionesController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\proveedoresController;
+use App\Http\Controllers\ventaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,7 +35,8 @@ Route::resources([
     'productos' => ProductoController::class,
     'clientes' => clienteController::class,
     'proveedores' => proveedoresController::class,
-    'compras' => compraController::class
+    'compras' => compraController::class,
+    'ventas' => ventaController::class
 ]);
 
 

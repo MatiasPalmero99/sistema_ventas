@@ -23,7 +23,7 @@
         </ol>
 
         <div class="container-fluid">
-            <form action='{{ route('clientes.store') }}' method="POST">
+            <form action='{{ route('compras.store') }}' method="POST">
                 @csrf
                 <div class="row gy-4">
 
@@ -41,36 +41,36 @@
                                             <option {{ old('producto_id') == $item->id ? 'selected' : '' }} value="{{ $item->id }}">{{ $item->codigo.' - '.$item->nombre }}</option>
                                         @endforeach
                                     </select>
-                                    @error('producto_id')
+                                    {{-- @error('producto_id')
                                         <small class="text-danger">{{'*'.$message}}</small>
-                                    @enderror
+                                    @enderror --}}
                                 </div>
 
                                  {{-- Cantidad --}}
                                  <div class="col-md-4 mb-2">
                                     <label for="cantidad" class="form-label">Cantidad:</label>
                                     <input type="number" name="cantidad" id="cantidad" class="form-control">
-                                    @error('cantidad')
+                                    {{-- @error('cantidad')
                                         <small class="text-danger">{{'*'.$message}}</small>
-                                    @enderror
+                                    @enderror --}}
                                 </div>
 
                                 {{-- Precio de compra --}}
                                 <div class="col-md-4 mb-2">
                                     <label for="precio_compra" class="form-label">Precio de compra:</label>
                                     <input type="number" name="precio_compra" id="precio_compra" class="form-control" step="0.1">
-                                    @error('precio_compra')
+                                    {{-- @error('precio_compra')
                                         <small class="text-danger">{{'*'.$message}}</small>
-                                    @enderror
+                                    @enderror --}}
                                 </div>
 
                                 {{-- Precio de venta --}}
                                 <div class="col-md-4 mb-2">
                                     <label for="precio_venta" class="form-label">Precio de venta:</label>
                                     <input type="number" name="precio_venta" id="precio_venta" class="form-control" step="0.1">
-                                    @error('precio_venta')
+                                    {{-- @error('precio_venta')
                                         <small class="text-danger">{{'*'.$message}}</small>
-                                    @enderror
+                                    @enderror --}}
                                 </div>
 
                                 {{-- Boton para agregar --}}
@@ -82,7 +82,7 @@
                                 <div class="col-md-12">
                                     <div class="table-responsive">
                                         <table id="tabla_detalle" class="table table-hover">
-                                            <thead class="bg-primary text-white">
+                                            <thead class="table-dark text-white">
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Producto</th>
@@ -118,7 +118,7 @@
                                                 <tr>
                                                     <th></th>
                                                     <th colspan="4">Total</th>
-                                                    <th colspan="2"><span id="total">0</span></th>
+                                                    <th colspan="2"><input type="hidden" name="total" value="0" id="inputTotal"><span id="total">0</span></th>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -151,7 +151,7 @@
                                             <option {{ old('proveedore_id') == $item->id ? 'selected' : '' }} value="{{ $item->id }}">{{ $item->persona->razon_social }}</option>
                                         @endforeach
                                     </select>
-                                    @error('documento_id')
+                                    @error('proveedore_id')
                                         <small class="text-danger">{{'*'.$message}}</small>
                                     @enderror
                                 </div>
@@ -164,7 +164,7 @@
                                             <option {{ old('comprobante_id') == $item->id ? 'selected' : '' }} value="{{ $item->id }}">{{ $item->tipo_comprobante }}</option>
                                         @endforeach
                                     </select>
-                                    @error('documento_id')
+                                    @error('comprobante_id')
                                         <small class="text-danger">{{'*'.$message}}</small>
                                     @enderror
                                 </div>
@@ -190,10 +190,15 @@
                                 {{-- Fecha --}}
                                 <div class="col-md-6 mb-2">
                                     <label for="fecha" class="form-label">Fecha:</label>
-                                    <input type="date" name="fecha" id="fecha" class="form-control border-success" value="<?php echo date("Y-m-d") ?> " readonly>
-                                    @error('fecha')
+                                    <input type="date" name="fecha" id="fecha" class="form-control border-success" value="<?php echo date("Y-m-d") ?>" readonly>
+                                    <?php
+                                    use Carbon\Carbon;
+                                    $fecha_hora = Carbon::now()->toDateTimeString();
+                                    ?>
+                                    <input type="hidden" name="fecha_hora" value="{{ $fecha_hora }}">
+                                    {{-- @error('fecha')
                                         <small class="text-danger">{{'*'.$message}}</small>
-                                    @enderror
+                                    @enderror --}}
                                 </div>
 
                                 {{-- Botones --}}
@@ -269,7 +274,6 @@
             disableButtons();
 
             $('#impuesto').val(impuesto + '%');
-
         });
 
         // Variables
@@ -316,10 +320,10 @@
 
                         let fila = '<tr id="fila_'+cont+'">' +
                                         '<th>'+ (cont + 1) +'</th>' +
-                                        '<td>'+ nameProducto +'</td>' +
-                                        '<td>'+ cantidad +'</td>' +
-                                        '<td>'+ precioCompra +'</td>' +
-                                        '<td>'+ precioVenta +'</td>' +
+                                        '<td><input type="hidden" name="arrayidproducto[]" value="'+idProducto+'">'+ nameProducto +'</td>' +
+                                        '<td><input type="hidden" name="arraycantidad[]" value="'+cantidad+'">'+ cantidad +'</td>' +
+                                        '<td><input type="hidden" name="arraypreciocompra[]" value="'+precioCompra+'">'+ precioCompra +'</td>' +
+                                        '<td><input type="hidden" name="arrayprecioventa[]" value="'+precioVenta+'">'+ precioVenta +'</td>' +
                                         '<td>'+ subtotal[cont] +'</td>' +
                                         '<td><button class="btn btn-danger" type="button" onClick="eliminarProducto('+cont+')"><i class="fa-regular fa-circle-xmark fs-3 text-white"></i></button></td>' +
                                     '</tr>';
@@ -334,6 +338,8 @@
                         $('#sumas').html(sumas);
                         $('#iva').html(iva);
                         $('#total').html(total);
+                        $('#impuesto').val(iva);
+                        $('#inputTotal').val(total);
 
                         showModal('Producto agregado', 'success');
                     } else {
@@ -357,6 +363,8 @@
             $('#sumas').html(sumas);
             $('#iva').html(iva);
             $('#total').html(total);
+            $('#impuesto').val(iva);
+            $('#inputTotal').val(total);
 
             // Eliminar fila de la tabla
             $('#fila_'+indice).remove();
@@ -380,6 +388,7 @@
                             '<td></td>' +
                         '</tr>';
             $('#tabla_detalle').append(fila);
+            $('#impuesto').val(impuesto + '%');
 
             // reiniciar valores de las variables
             cont = 0;
@@ -392,6 +401,7 @@
             $('#sumas').html(sumas);
             $('#iva').html(iva);
             $('#total').html(total);
+            $('#inputTotal').val(total);
 
             limpiarCampos();
 

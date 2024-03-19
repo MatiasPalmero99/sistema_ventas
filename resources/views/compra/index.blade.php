@@ -59,48 +59,57 @@
                     <thead class="table-dark">
                         <tr>
                             <th>#</th>
-                            <th>Nombre</th>
-                            <th>Dirección</th>
-                            <th>Documento</th>
-                            <th>Tipo de persona</th>
-                            <th>Estado</th>
+                            <th>Comprobante</th>
+                            <th>Proveedor</th>
+                            <th>Fecha y hora</th>
+                            <th>Total</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- @foreach ($clientes as $item)
+                        @foreach ($compras as $item)
                             <tr>
                                 <td>{{ $item->id }}</td>
-                                <td>{{ $item->persona->razon_social }}</td>
-                                <td>{{ $item->persona->direccion }}</td>
                                 <td>
-                                    <p class="fw-normal d-inline">{{ $item->persona->documento->tipo_documento }}: </p>
-                                    <p class="text-muted d-inline">{{ $item->persona->numero_documento }}</p>
+                                    <p class="fw-semibold d-inline">{{ ucfirst($item->comprobante->tipo_comprobante) }}: </p>
+                                    <p class="text-muted d-inline">{{ $item->numero_comprobante  }}</p>
                                 </td>
-                                <td>{{ $item->persona->tipo_persona }}</td>
                                 <td>
+                                    <p class="fw-semibold d-inline">{{ ucfirst($item->proveedore->persona->tipo_persona) }}: </p>
+                                    <p class="text-muted d-inline">{{ $item->proveedore->persona->razon_social  }}</p>
+                                </td>
+                                <td>
+                                    {{
+                                        \Carbon\Carbon::parse($item->fecha_hora)->format('d-m-Y') .'  '.
+                                        \Carbon\Carbon::parse($item->fecha_hora)->format('H:i')
+                                    }}
+                                </td>
+                                <td>
+                                    {{ $item->total }}    
+                                </td>
+                                {{-- <td>
                                     @if ($item->persona->estado == 1)
                                         <span class="fw-bolder rounded bg-success text-white p-1">Activo</span>
                                     @else
                                         <span class="fw-bolder rounded bg-danger text-white p-1">Eliminado</span>
                                     @endif
-                                </td>
+                                </td> --}}
                                 <td class="text-center">
-                                    <form class="d-inline" action="{{ route('clientes.edit', ['cliente' => $item]) }}" method="GET">
-                                        <button type="submit" class="text-success mx-1" style="border:none; background-color:transparent;" title="Editar">
-                                            <i class="fa-regular fa-pen-to-square"></i>
+                                    <form class="d-inline" action="{{ route('compras.show', ['compra'=>$item]) }}">
+                                        <button type="submit" class="text-info mx-1" style="border:none; background-color:transparent;" title="Ver detalle">
+                                            <i class="fa-solid fa-eye"></i>
                                         </button>
                                     </form>
 
-                                    @if ($item->persona->estado == 1)
-                                        <button type="button" class="text-danger mx-1" style="border:none; background-color:transparent;" title="Borrar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
-                                            <i class="fa-solid fa-trash-can"></i>
+                                    {{-- <form class="d-inline" action="" method="GET">
+                                        <button type="submit" class="text-success mx-1" style="border:none; background-color:transparent;" title="Editar">
+                                            <i class="fa-regular fa-pen-to-square"></i>
                                         </button>
-                                    @else
-                                        <button type="button" class="text-success mx-1" style="border:none; background-color:transparent;" title="Restaurar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
-                                            <i class="fa-solid fa-trash-can-arrow-up"></i>
-                                        </button>
-                                    @endif
+                                    </form> --}}
+
+                                    <button type="button" class="text-danger mx-1" style="border:none; background-color:transparent;" title="Borrar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
 
                                 </td>
                             </tr>
@@ -115,11 +124,11 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        {{ $item->persona->estado ==1 ? '¿Seguro deseas eliminar este cliente?' : '¿Seguro deseas restaurar este cliente?'}}
+                                        ¿Seguro deseas eliminar esta compra?
                                     </div>
                                     <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <form action="{{ route('clientes.destroy', ['cliente' => $item->persona->id]) }}" method="POST">
+                                    <form action="{{ route('compras.destroy', ['compra' => $item->id]) }}" method="POST">
                                         @method('DELETE')
                                         @csrf
                                         <button type="submit" class="btn btn-primary">Confirmar</button>
@@ -128,7 +137,7 @@
                                 </div>
                                 </div>
                             </div>
-                        @endforeach --}}
+                        @endforeach
                     </tbody>
                 </table>
             </div>
