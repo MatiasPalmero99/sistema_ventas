@@ -1,6 +1,6 @@
 @extends('template')
 
-@section('title', 'Crear Compra')
+@section('title', 'Ver Compra')
 
 @push('css')
     {{-- jquery --}}
@@ -120,7 +120,7 @@
                                     <td>{{ $item->nombre }}</td>
                                     <td>{{ $item->pivot->cantidad }}</td>
                                     <td>{{ $item->pivot->precio_compra }}</td>
-                                    <td>{{ $item->pivot->precio_compra }}</td>
+                                    <td>{{ $item->pivot->precio_venta }}</td>
                                     <td class="td_subtotal">{{ ($item->pivot->cantidad) * ($item->pivot->precio_compra) }}</td>
                                 </tr>
                             @endforeach

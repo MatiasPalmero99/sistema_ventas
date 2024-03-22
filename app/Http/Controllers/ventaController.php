@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreVentaRequest;
 use App\Models\Cliente;
 use App\Models\Comprobante;
 use App\Models\Producto;
+use App\Models\Venta;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +19,12 @@ class ventaController extends Controller
      */
     public function index()
     {
-        return view('ventas.index');
+        $ventas = Venta::with(['comprobante','cliente.persona','user'])
+        ->where('estado',1)
+        ->latest()
+        ->get();
+
+        return view('ventas.index', compact('ventas'));
     }
 
     /**
@@ -52,17 +60,63 @@ class ventaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreVentaRequest $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            // Llenar tabla venta
+            $venta = Venta::create($request->validated());
+
+            // Llenar tabla producto_venta
+            // 1- Recuperar los arrays
+            $arrayProducto_id = $request->get('arrayidproducto');
+            $arrayCantidad = $request->get('arraycantidad');
+            $arrayPrecioVenta = $request->get('arrayprecioventa');
+            $arrayDescuento = $request->get('arraydescuento');
+
+            // 2- Realizar llenado de tabla
+            $count_items = count($arrayProducto_id);
+            $cont = 0;
+            while ($cont < $count_items) {
+                $venta->productos()->syncWithoutDetaching([
+                    $arrayProducto_id[$cont] => [
+                        'cantidad' => $arrayCantidad[$cont],
+                        'precio_venta' => $arrayPrecioVenta[$cont],
+                        'descuento' => $arrayDescuento[$cont],
+                    ]
+                ]);
+            
+
+                // 3- Actualizar stock
+                $producto = Producto::find($arrayProducto_id[$cont]);
+                $stockActual = $producto->stock;
+                $stockNuevo = intval($arrayCantidad[$cont]);
+
+                DB::table('productos')
+                ->where('id', $producto->id)
+                ->update([
+                    'stock' => $stockActual - $stockNuevo
+                ]);
+
+                $cont++;
+            }
+
+            DB::commit();
+
+            return redirect()->route('ventas.index')->with('success', '¡Venta exitosa!');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->route('ventas.index')->with('success', 'Ocurrió un error durante la venta, intente nuevamente!');
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Venta $venta)
     {
-        //
+        return view('ventas.show', compact('venta'));
     }
 
     /**
@@ -86,6 +140,11 @@ class ventaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Venta::where('id', $id)
+        ->update([
+            'estado' => 0
+        ]);
+
+        return redirect()->route('ventas.index')->with('success', 'Venta eliminada');
     }
 }
