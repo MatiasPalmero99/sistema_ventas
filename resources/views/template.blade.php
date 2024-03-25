@@ -13,24 +13,29 @@
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         @stack('css')
     </head>
-    <body class="sb-nav-fixed">
+    @auth
+        <body class="sb-nav-fixed">
 
-        <x-navigation-header/>
+            <x-navigation-header/>
 
-        <div id="layoutSidenav">
+            <div id="layoutSidenav">
 
-            <x-navigation-menu/>
+                <x-navigation-menu/>
 
-            <div id="layoutSidenav_content">
-                <main>
-                    @yield('content')
-                </main>
-                <x-footer/>
+                <div id="layoutSidenav_content">
+                    <main>
+                        @yield('content')
+                    </main>
+                    <x-footer/>
+                </div>
             </div>
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> --}}
-        <script src="{{ asset('js/scripts.js')}}"></script>
-        @stack('js')
-    </body>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+            {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> --}}
+            <script src="{{ asset('js/scripts.js')}}"></script>
+            @stack('js')
+        </body>
+    @endauth
+    @guest
+        @include('pages.401')
+    @endguest
 </html>

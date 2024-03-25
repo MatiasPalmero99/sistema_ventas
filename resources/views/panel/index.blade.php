@@ -3,10 +3,36 @@
 @section('title', 'Panel')
 
 @push('css')
+    {{-- SWEET ALERT 2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
 @endpush
 
 @section('content')
+
+@if(session('success'))
+    <script>
+        let message = '{{ session('success') }}';
+        Swal.fire({
+            title: message,
+            showClass: {
+                popup: `
+                animate__animated
+                animate__fadeInUp
+                animate__faster
+                `
+            },
+            hideClass: {
+                popup: `
+                animate__animated
+                animate__fadeOutDown
+                animate__faster
+                `
+            }
+        });
+    </script>
+@endif
     
     <div class="container-fluid px-4">
         <h1 class="mt-4">Dashboard</h1>
