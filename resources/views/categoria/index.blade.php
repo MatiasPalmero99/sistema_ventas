@@ -42,11 +42,13 @@
             <li class="breadcrumb-item active">Categorías</li>
         </ol>
 
-        <div class="mb-4">
-            <a href="{{ route('categorias.create') }}">
-                <button type="button" class="btn btn-primary">Añadir nuevo registro</button>
-            </a>
-        </div>
+        @can('crear-categoria')
+            <div class="mb-4">
+                <a href="{{ route('categorias.create') }}">
+                    <button type="button" class="btn btn-primary">Añadir nuevo registro</button>
+                </a>
+            </div>
+        @endcan
 
 
         <div class="card mb-4">
@@ -79,22 +81,25 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <form class="d-inline" action="{{ route('categorias.edit', ['categoria' => $categoria]) }}" method="GET">
-                                        <button type="submit" class="text-success mx-1" style="border:none; background-color:transparent;" title="Editar">
-                                            <i class="fa-regular fa-pen-to-square"></i>
-                                        </button>
-                                    </form>
+                                    @can('editar-categoria')
+                                        <form class="d-inline" action="{{ route('categorias.edit', ['categoria' => $categoria]) }}" method="GET">
+                                            <button type="submit" class="text-success mx-1" style="border:none; background-color:transparent;" title="Editar">
+                                                <i class="fa-regular fa-pen-to-square"></i>
+                                            </button>
+                                        </form>
+                                    @endcan
 
-                                    @if ($categoria->caracteristica->estado == 1)
-                                        <button type="button" class="text-danger mx-1" style="border:none; background-color:transparent;" title="Borrar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$categoria->id}}">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </button>
-                                    @else
-                                        <button type="button" class="text-success mx-1" style="border:none; background-color:transparent;" title="Restaurar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$categoria->id}}">
-                                            <i class="fa-solid fa-trash-can-arrow-up"></i>
-                                        </button>
-                                    @endif
-
+                                    @can('eliminar-categoria')
+                                        @if ($categoria->caracteristica->estado == 1)
+                                            <button type="button" class="text-danger mx-1" style="border:none; background-color:transparent;" title="Borrar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$categoria->id}}">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        @else
+                                            <button type="button" class="text-success mx-1" style="border:none; background-color:transparent;" title="Restaurar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$categoria->id}}">
+                                                <i class="fa-solid fa-trash-can-arrow-up"></i>
+                                            </button>
+                                        @endif
+                                    @endcan
                                 </td>
                             </tr>
 

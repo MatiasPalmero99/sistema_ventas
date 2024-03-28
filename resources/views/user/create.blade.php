@@ -76,7 +76,7 @@
                     <div class="row mb-4">
                         <label for="password_confirm" class="col-sm-2 col-form-label">Confirmar contraseña:</label>
                         <div class="col-sm-4">
-                            <input type="password_confirm" name="password_confirm" id="password_confirm" class="form-control">
+                            <input type="password" name="password_confirm" id="password_confirm" class="form-control">
                         </div>
                         <div class="col-sm-4">
                             <div class="form-text">
