@@ -42,12 +42,13 @@
             <li class="breadcrumb-item active">Ventas</li>
         </ol>
 
-        <div class="mb-4">
-            <a href="{{ route('ventas.create') }}">
-                <button type="button" class="btn btn-primary">Añadir nuevo registro</button>
-            </a>
-        </div>
-
+        @can('crear-venta')
+            <div class="mb-4">
+                <a href="{{ route('ventas.create') }}">
+                    <button type="button" class="btn btn-primary">Añadir nuevo registro</button>
+                </a>
+            </div>
+        @endcan
 
         <div class="card mb-4">
             <div class="card-header">
@@ -92,16 +93,18 @@
                                     {{ $item->total }}    
                                 </td>
                                 <td class="text-center">
-                                    <form class="d-inline" action="{{ route('ventas.show', ['venta'=>$item]) }}">
-                                        <button type="submit" class="text-info mx-1" style="border:none; background-color:transparent;" title="Ver detalle">
-                                            <i class="fa-solid fa-eye"></i>
+                                    @can('mostrar-venta')
+                                        <form class="d-inline" action="{{ route('ventas.show', ['venta'=>$item]) }}">
+                                            <button type="submit" class="text-info mx-1" style="border:none; background-color:transparent;" title="Ver detalle">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </button>
+                                        </form>
+                                    @endcan
+                                    @can('eliminar-venta')
+                                        <button type="button" class="text-danger mx-1" style="border:none; background-color:transparent;" title="Borrar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
+                                            <i class="fa-solid fa-trash-can"></i>
                                         </button>
-                                    </form>
-
-                                    <button type="button" class="text-danger mx-1" style="border:none; background-color:transparent;" title="Borrar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>
-
+                                    @endcan
                                 </td>
                             </tr>
 

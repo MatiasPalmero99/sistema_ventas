@@ -42,11 +42,13 @@
             <li class="breadcrumb-item active">Roles</li>
         </ol>
 
-        <div class="mb-4">
-            <a href="{{ route('roles.create') }}">
-                <button type="button" class="btn btn-primary">Añadir nuevo rol</button>
-            </a>
-        </div>
+        @can('crear-role')
+            <div class="mb-4">
+                <a href="{{ route('roles.create') }}">
+                    <button type="button" class="btn btn-primary">Añadir nuevo rol</button>
+                </a>
+            </div>
+        @endcan
 
 
         <div class="card mb-4">
@@ -69,15 +71,18 @@
                                 <td>{{ $item->id }}</td>
                                 <td>{{ $item->name }}</td>
                                 <td class="text-center">
-                                    <form class="d-inline" action="{{ route('roles.edit', ['role' => $item]) }}" method="GET">
-                                        <button type="submit" class="text-success mx-1" style="border:none; background-color:transparent;" title="Editar">
-                                            <i class="fa-regular fa-pen-to-square"></i>
+                                    @can('editar-role')
+                                        <form class="d-inline" action="{{ route('roles.edit', ['role' => $item]) }}" method="GET">
+                                            <button type="submit" class="text-success mx-1" style="border:none; background-color:transparent;" title="Editar">
+                                                <i class="fa-regular fa-pen-to-square"></i>
+                                            </button>
+                                        </form>
+                                    @endcan
+                                    @can('eliminar-role')
+                                        <button type="button" class="text-danger mx-1" style="border:none; background-color:transparent;" title="Borrar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
+                                            <i class="fa-solid fa-trash-can"></i>
                                         </button>
-                                    </form>
-
-                                    <button type="button" class="text-danger mx-1" style="border:none; background-color:transparent;" title="Borrar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>
+                                    @endcan
                                 </td>
                             </tr>
 

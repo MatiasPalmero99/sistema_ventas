@@ -42,12 +42,13 @@
             <li class="breadcrumb-item active">Compras</li>
         </ol>
 
-        <div class="mb-4">
-            <a href="{{ route('compras.create') }}">
-                <button type="button" class="btn btn-primary">Añadir nuevo registro</button>
-            </a>
-        </div>
-
+        @can('crear-compra')
+            <div class="mb-4">
+                <a href="{{ route('compras.create') }}">
+                    <button type="button" class="btn btn-primary">Añadir nuevo registro</button>
+                </a>
+            </div>
+        @endcan
 
         <div class="card mb-4">
             <div class="card-header">
@@ -95,22 +96,24 @@
                                     @endif
                                 </td> --}}
                                 <td class="text-center">
-                                    <form class="d-inline" action="{{ route('compras.show', ['compra'=>$item]) }}">
-                                        <button type="submit" class="text-info mx-1" style="border:none; background-color:transparent;" title="Ver detalle">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </button>
-                                    </form>
+                                    @can('mostrar-compra')
+                                        <form class="d-inline" action="{{ route('compras.show', ['compra'=>$item]) }}">
+                                            <button type="submit" class="text-info mx-1" style="border:none; background-color:transparent;" title="Ver detalle">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </button>
+                                        </form>
+                                    @endcan
 
                                     {{-- <form class="d-inline" action="" method="GET">
                                         <button type="submit" class="text-success mx-1" style="border:none; background-color:transparent;" title="Editar">
                                             <i class="fa-regular fa-pen-to-square"></i>
                                         </button>
                                     </form> --}}
-
-                                    <button type="button" class="text-danger mx-1" style="border:none; background-color:transparent;" title="Borrar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>
-
+                                    @can('eliminar-compra')
+                                        <button type="button" class="text-danger mx-1" style="border:none; background-color:transparent;" title="Borrar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    @endcan
                                 </td>
                             </tr>
 

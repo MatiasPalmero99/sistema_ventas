@@ -42,11 +42,13 @@
             <li class="breadcrumb-item active">Clientes</li>
         </ol>
 
-        <div class="mb-4">
-            <a href="{{ route('clientes.create') }}">
-                <button type="button" class="btn btn-primary">Añadir nuevo registro</button>
-            </a>
-        </div>
+        @can('crear-cliente')
+            <div class="mb-4">
+                <a href="{{ route('clientes.create') }}">
+                    <button type="button" class="btn btn-primary">Añadir nuevo registro</button>
+                </a>
+            </div>
+        @endcan
 
 
         <div class="card mb-4">
@@ -86,22 +88,25 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <form class="d-inline" action="{{ route('clientes.edit', ['cliente' => $item]) }}" method="GET">
-                                        <button type="submit" class="text-success mx-1" style="border:none; background-color:transparent;" title="Editar">
-                                            <i class="fa-regular fa-pen-to-square"></i>
-                                        </button>
-                                    </form>
+                                    @can('editar-cliente')
+                                        <form class="d-inline" action="{{ route('clientes.edit', ['cliente' => $item]) }}" method="GET">
+                                            <button type="submit" class="text-success mx-1" style="border:none; background-color:transparent;" title="Editar">
+                                                <i class="fa-regular fa-pen-to-square"></i>
+                                            </button>
+                                        </form>
+                                    @endcan
 
-                                    @if ($item->persona->estado == 1)
-                                        <button type="button" class="text-danger mx-1" style="border:none; background-color:transparent;" title="Borrar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </button>
-                                    @else
-                                        <button type="button" class="text-success mx-1" style="border:none; background-color:transparent;" title="Restaurar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
-                                            <i class="fa-solid fa-trash-can-arrow-up"></i>
-                                        </button>
-                                    @endif
-
+                                    @can('eliminar-cliente')
+                                        @if ($item->persona->estado == 1)
+                                            <button type="button" class="text-danger mx-1" style="border:none; background-color:transparent;" title="Borrar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        @else
+                                            <button type="button" class="text-success mx-1" style="border:none; background-color:transparent;" title="Restaurar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
+                                                <i class="fa-solid fa-trash-can-arrow-up"></i>
+                                            </button>
+                                        @endif
+                                    @endcan
                                 </td>
                             </tr>
 
