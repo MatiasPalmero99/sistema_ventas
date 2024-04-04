@@ -55,14 +55,14 @@
                 <i class="fas fa-table me-1"></i>
                 Tabla Compras
             </div>
-            <div class="card-body">
+            <div class="card-body table-responsive">
                 <table id="example" class="table table-light table-striped" style="width:100%">
                     <thead class="table-dark">
                         <tr>
                             <th>#</th>
                             <th>Comprobante</th>
                             <th>Proveedor</th>
-                            <th>Fecha y hora</th>
+                            <th>Fecha</th>
                             <th>Total</th>
                             <th>Acciones</th>
                         </tr>
@@ -70,14 +70,14 @@
                     <tbody>
                         @foreach ($compras as $item)
                             <tr>
-                                <td>{{ $item->id }}</td>
+                                <td class="fw-semibold">{{ $item->id }}</td>
                                 <td>
                                     <p class="fw-semibold d-inline">{{ ucfirst($item->comprobante->tipo_comprobante) }}: </p>
-                                    <p class="text-muted d-inline">{{ $item->numero_comprobante  }}</p>
+                                    <p class="text-danger fw-semibold d-inline">{{ $item->numero_comprobante  }}</p>
                                 </td>
                                 <td>
                                     <p class="fw-semibold d-inline">{{ ucfirst($item->proveedore->persona->tipo_persona) }}: </p>
-                                    <p class="text-muted d-inline">{{ $item->proveedore->persona->razon_social  }}</p>
+                                    <p class="text-success fw-semibold d-inline">{{ $item->proveedore->persona->razon_social  }}</p>
                                 </td>
                                 <td>
                                     {{
@@ -85,8 +85,8 @@
                                         \Carbon\Carbon::parse($item->fecha_hora)->format('H:i')
                                     }}
                                 </td>
-                                <td>
-                                    {{ $item->total }}    
+                                <td class="text-success fw-bold">
+                                    $ {{ $item->total }}    
                                 </td>
                                 {{-- <td>
                                     @if ($item->persona->estado == 1)

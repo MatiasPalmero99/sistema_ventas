@@ -21,230 +21,229 @@
             <li class="breadcrumb-item"><a href="{{ route('compras.index') }}">Compras</a></li>
             <li class="breadcrumb-item active">Crear Compra</li>
         </ol>
+    <div>
+            
 
-        <div class="container-fluid">
-            <form action='{{ route('compras.store') }}' method="POST">
-                @csrf
-                <div class="row gy-4">
-
-                    {{-- Compra Producto --}}
-                    <div class="col-md-8">
-                        <div class="text-white bg-primary p-1 text-center">
-                            Detalles de la compra
-                        </div>
-                        <div class="p-3 border border-3 border-primary">
-                            <div class="row">
-                                {{-- Producto --}}
-                                <div class="col-12 mb-4">
-                                    <select name="producto_id" id="producto_id" class="form-control selectpicker" data-live-search="true" title="Busca un producto" data-size="5">
-                                        @foreach ($productos as $item)
-                                            <option {{ old('producto_id') == $item->id ? 'selected' : '' }} value="{{ $item->id }}">{{ $item->codigo.' - '.$item->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                    {{-- @error('producto_id')
-                                        <small class="text-danger">{{'*'.$message}}</small>
-                                    @enderror --}}
-                                </div>
-
-                                 {{-- Cantidad --}}
-                                 <div class="col-md-4 mb-2">
-                                    <label for="cantidad" class="form-label">Cantidad:</label>
-                                    <input type="number" name="cantidad" id="cantidad" class="form-control">
-                                    {{-- @error('cantidad')
-                                        <small class="text-danger">{{'*'.$message}}</small>
-                                    @enderror --}}
-                                </div>
-
-                                {{-- Precio de compra --}}
-                                <div class="col-md-4 mb-2">
-                                    <label for="precio_compra" class="form-label">Precio de compra:</label>
-                                    <input type="number" name="precio_compra" id="precio_compra" class="form-control" step="0.1">
-                                    {{-- @error('precio_compra')
-                                        <small class="text-danger">{{'*'.$message}}</small>
-                                    @enderror --}}
-                                </div>
-
-                                {{-- Precio de venta --}}
-                                <div class="col-md-4 mb-2">
-                                    <label for="precio_venta" class="form-label">Precio de venta:</label>
-                                    <input type="number" name="precio_venta" id="precio_venta" class="form-control" step="0.1">
-                                    {{-- @error('precio_venta')
-                                        <small class="text-danger">{{'*'.$message}}</small>
-                                    @enderror --}}
-                                </div>
-
-                                {{-- Boton para agregar --}}
-                                <div class="col-md-12 my-3 text-end">
-                                    <button id="btn_agregar" type="button" class="btn btn-primary">Agregar</button>
-                                </div>
-
-                                {{-- Tabla para el detalle de la compra --}}
-                                <div class="col-md-12">
-                                    <div class="table-responsive">
-                                        <table id="tabla_detalle" class="table table-hover">
-                                            <thead class="table-dark text-white">
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Producto</th>
-                                                    <th>Cantidad</th>
-                                                    <th>Precio compra</th>
-                                                    <th>Precio venta</th>
-                                                    <th>Subtotal</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <th></th>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <th></th>
-                                                    <th colspan="4">Sumas</th>
-                                                    <th colspan="2"><span id="sumas">0</span></th>
-                                                </tr>
-                                                <tr>
-                                                    <th></th>
-                                                    <th colspan="4">IVA %</th>
-                                                    <th colspan="2"><span id="iva">0</span></th>
-                                                </tr>
-                                                <tr>
-                                                    <th></th>
-                                                    <th colspan="4">Total</th>
-                                                    <th colspan="2"><input type="hidden" name="total" value="0" id="inputTotal"><span id="total">0</span></th>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                {{-- Boton para cancelar compra --}}
-                                <div class="col-md-12 mb-2">
-                                    <button type="button" id="cancelar" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                        Cancelar compra
-                                      </button>
-                                </div>
-
-                            </div>
-                        </div>
+    <div class="container-fluid px-0">
+        <form action='{{ route('compras.store') }}' method="POST">
+            @csrf
+            <div class="row">
+                {{-- Compra Producto --}}
+                <div class="col-md-8">
+                    <div class="w-100 text-light bg-secondary py-1 text-center fw-semibold rounded-top-3">
+                        Detalles de la compra
                     </div>
-
-                    {{-- Producto --}}
-                    <div class="col-md-4">
-                        <div class="text-white bg-success p-1 text-center">
-                            Datos generales
-                        </div>
-                        <div class="p-3 border border-3 border-success">
-                            <div class="row">
-                                {{-- Proveedor --}}
-                                <div class="col-md-12 mb-2">
-                                    <label for="proveedore_id" class="form-label">Proveedor:</label>
-                                    <select name="proveedore_id" id="proveedore_id" class="form-control selectpicker show-tick" data-live-search="true" title="Selecciona" data-size="5">
-                                        @foreach ($proveedores as $item)
-                                            <option {{ old('proveedore_id') == $item->id ? 'selected' : '' }} value="{{ $item->id }}">{{ $item->persona->razon_social }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('proveedore_id')
-                                        <small class="text-danger">{{'*'.$message}}</small>
-                                    @enderror
-                                </div>
-
-                                {{-- Tipo de comprobante --}}
-                                <div class="col-md-12 mb-2">
-                                    <label for="comprobante_id" class="form-label">Comprobante:</label>
-                                    <select name="comprobante_id" id="comprobante_id" class="form-control selectpicker show-tick" title="Selecciona">
-                                        @foreach ($comprobantes as $item)
-                                            <option {{ old('comprobante_id') == $item->id ? 'selected' : '' }} value="{{ $item->id }}">{{ $item->tipo_comprobante }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('comprobante_id')
-                                        <small class="text-danger">{{'*'.$message}}</small>
-                                    @enderror
-                                </div>
-
-                                {{-- Numero de comprobante --}}
-                                <div class="col-md-12 mb-2">
-                                    <label for="numero_comprobante" class="form-label">Número de comprobante:</label>
-                                    <input type="text" name="numero_comprobante" id="numero_comprobante" class="form-control" required>
-                                    @error('numero_comprobante')
-                                        <small class="text-danger">{{'*'.$message}}</small>
-                                    @enderror
-                                </div>
-
-                                {{-- Impuesto --}}
-                                <div class="col-md-6 mb-2">
-                                    <label for="impuesto" class="form-label">Impuesto:</label>
-                                    <input type="text" name="impuesto" id="impuesto" class="form-control border-success" readonly>
-                                    @error('impuesto')
-                                        <small class="text-danger">{{'*'.$message}}</small>
-                                    @enderror
-                                </div>
-
-                                {{-- Fecha --}}
-                                <div class="col-md-6 mb-2">
-                                    <label for="fecha" class="form-label">Fecha:</label>
-                                    <input type="date" name="fecha" id="fecha" class="form-control border-success" value="<?php echo date("Y-m-d") ?>" readonly>
-                                    <?php
-                                    use Carbon\Carbon;
-                                    $fecha_hora = Carbon::now()->toDateTimeString();
-                                    ?>
-                                    <input type="hidden" name="fecha_hora" value="{{ $fecha_hora }}">
-                                    {{-- @error('fecha')
-                                        <small class="text-danger">{{'*'.$message}}</small>
-                                    @enderror --}}
-                                </div>
-
-                                {{-- Botones --}}
-                                <div class="col-md-12 my-3 text-center">
-                                    <button type="submit" class="btn btn-success" id="guardar">Guardar</button>
-                                </div>
-
+                    <div class="p-3 bg-body-secondary rounded-bottom-3">
+                        <div class="row">
+                            {{-- Producto --}}
+                            <div class="col-12 mb-4">
+                                <select name="producto_id" id="producto_id" class="form-control selectpicker" data-live-search="true" title="Busca un producto" data-size="5">
+                                    @foreach ($productos as $item)
+                                        <option {{ old('producto_id') == $item->id ? 'selected' : '' }} value="{{ $item->id }}">{{ $item->codigo.' - '.$item->nombre }}</option>
+                                    @endforeach
+                                </select>
+                                {{-- @error('producto_id')
+                                    <small class="text-danger">{{'*'.$message}}</small>
+                                @enderror --}}
                             </div>
+
+                                {{-- Cantidad --}}
+                                <div class="col-md-4 mb-2">
+                                <label for="cantidad" class="form-label">Cantidad:</label>
+                                <input type="number" name="cantidad" id="cantidad" class="form-control">
+                                {{-- @error('cantidad')
+                                    <small class="text-danger">{{'*'.$message}}</small>
+                                @enderror --}}
+                            </div>
+
+                            {{-- Precio de compra --}}
+                            <div class="col-md-4 mb-2">
+                                <label for="precio_compra" class="form-label">Precio de compra:</label>
+                                <input type="number" name="precio_compra" id="precio_compra" class="form-control" step="0.1">
+                                {{-- @error('precio_compra')
+                                    <small class="text-danger">{{'*'.$message}}</small>
+                                @enderror --}}
+                            </div>
+
+                            {{-- Precio de venta --}}
+                            <div class="col-md-4 mb-2">
+                                <label for="precio_venta" class="form-label">Precio de venta:</label>
+                                <input type="number" name="precio_venta" id="precio_venta" class="form-control" step="0.1">
+                                {{-- @error('precio_venta')
+                                    <small class="text-danger">{{'*'.$message}}</small>
+                                @enderror --}}
+                            </div>
+
+                            {{-- Boton para agregar --}}
+                            <div class="col-md-12 my-3 text-end">
+                                <button id="btn_agregar" type="button" class="btn btn-warning"><i class="fa-solid fa-cart-shopping"></i> Agregar</button>
+                            </div>
+
+                            {{-- Tabla para el detalle de la compra --}}
+                            <div class="col-md-12">
+                                <div class="table-responsive border-3">
+                                    <table id="tabla_detalle" class="table table-hover">
+                                        <thead class="table-dark text-white">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Producto</th>
+                                                <th>Cantidad</th>
+                                                <th>Precio compra</th>
+                                                <th>Precio venta</th>
+                                                <th>Subtotal</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th></th>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th></th>
+                                                <th colspan="4">Sumas</th>
+                                                <th colspan="2"><span id="sumas">0</span></th>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th colspan="4">IVA %</th>
+                                                <th colspan="2"><span id="iva">0</span></th>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th colspan="4">Total</th>
+                                                <th colspan="2"><input type="hidden" name="total" value="0" id="inputTotal"><span id="total">0</span></th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+
+                            {{-- Boton para cancelar compra --}}
+                            <div class="col-md-12 mb-2">
+                                <button type="button" id="cancelar" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Cancelar compra
+                                    </button>
+                            </div>
+
                         </div>
-                        {{-- <div class="col-12 col-md-6 mb-4">
-                            <label for="documento_id" class="form-label">Tipo de documento:</label>
-                            <select name="documento_id" id="documento_id" class="form-select">
-                                <option value="" selected>Selecciona una opción</option>
-                                @foreach ($documentos as $item)
-                                    <option {{ old('documento_id') == $item->id ? 'selected' : '' }} value="{{ $item->id }}">{{ $item->tipo_documento }}</option>
-                                @endforeach
-                            </select>
-                            @error('documento_id')
-                                <small class="text-danger">{{'*'.$message}}</small>
-                            @enderror
-                        </div> --}}
                     </div>
                 </div>
 
+                {{-- Producto --}}
+                <div class="col-md-4">
+                    <div class="text-white bg-secondary p-1 text-center fw-semibold rounded-top-3">
+                        Datos generales
+                    </div>
+                    <div class="p-3 bg-body-secondary rounded-bottom-3">
+                        <div class="row">
+                            {{-- Proveedor --}}
+                            <div class="col-md-12 mb-2">
+                                <label for="proveedore_id" class="form-label">Proveedor:</label>
+                                <select name="proveedore_id" id="proveedore_id" class="form-control selectpicker show-tick" data-live-search="true" title="Selecciona" data-size="5">
+                                    @foreach ($proveedores as $item)
+                                        <option {{ old('proveedore_id') == $item->id ? 'selected' : '' }} value="{{ $item->id }}">{{ $item->persona->razon_social }}</option>
+                                    @endforeach
+                                </select>
+                                @error('proveedore_id')
+                                    <small class="text-danger">{{'*'.$message}}</small>
+                                @enderror
+                            </div>
 
-                <!-- Modal Cancelar Compra -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal de confirmación</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            ¿Seguro que quieres cancelar la compra?
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button id="btn_cancelar_compra" type="button" class="btn btn-danger" data-bs-dismiss="modal">Confirmar</button>
+                            {{-- Tipo de comprobante --}}
+                            <div class="col-md-12 mb-2">
+                                <label for="comprobante_id" class="form-label">Comprobante:</label>
+                                <select name="comprobante_id" id="comprobante_id" class="form-control selectpicker show-tick" title="Selecciona">
+                                    @foreach ($comprobantes as $item)
+                                        <option {{ old('comprobante_id') == $item->id ? 'selected' : '' }} value="{{ $item->id }}">{{ $item->tipo_comprobante }}</option>
+                                    @endforeach
+                                </select>
+                                @error('comprobante_id')
+                                    <small class="text-danger">{{'*'.$message}}</small>
+                                @enderror
+                            </div>
+
+                            {{-- Numero de comprobante --}}
+                            <div class="col-md-12 mb-2">
+                                <label for="numero_comprobante" class="form-label">Número de comprobante:</label>
+                                <input type="text" name="numero_comprobante" id="numero_comprobante" class="form-control" required>
+                                @error('numero_comprobante')
+                                    <small class="text-danger">{{'*'.$message}}</small>
+                                @enderror
+                            </div>
+
+                            {{-- Impuesto --}}
+                            <div class="col-md-6 mb-2">
+                                <label for="impuesto" class="form-label">Impuesto:</label>
+                                <input type="text" name="impuesto" id="impuesto" class="form-control border-success" readonly>
+                                @error('impuesto')
+                                    <small class="text-danger">{{'*'.$message}}</small>
+                                @enderror
+                            </div>
+
+                            {{-- Fecha --}}
+                            <div class="col-md-6 mb-2">
+                                <label for="fecha" class="form-label">Fecha:</label>
+                                <input type="date" name="fecha" id="fecha" class="form-control border-success" value="<?php echo date("Y-m-d") ?>">
+                                <?php
+                                use Carbon\Carbon;
+                                $fecha_hora = Carbon::now()->toDateTimeString();
+                                ?>
+                                <input type="hidden" name="fecha_hora" value="{{ $fecha_hora }}">
+                                {{-- @error('fecha')
+                                    <small class="text-danger">{{'*'.$message}}</small>
+                                @enderror --}}
+                            </div>
+
+                            {{-- Botones --}}
+                            <div class="col-md-12 my-3 text-center">
+                                <button type="submit" class="btn btn-success" id="guardar">Guardar</button>
+                            </div>
+
                         </div>
                     </div>
+                    {{-- <div class="col-12 col-md-6 mb-4">
+                        <label for="documento_id" class="form-label">Tipo de documento:</label>
+                        <select name="documento_id" id="documento_id" class="form-select">
+                            <option value="" selected>Selecciona una opción</option>
+                            @foreach ($documentos as $item)
+                                <option {{ old('documento_id') == $item->id ? 'selected' : '' }} value="{{ $item->id }}">{{ $item->tipo_documento }}</option>
+                            @endforeach
+                        </select>
+                        @error('documento_id')
+                            <small class="text-danger">{{'*'.$message}}</small>
+                        @enderror
+                    </div> --}}
+                </div>
+            </div>
+
+
+            <!-- Modal Cancelar Compra -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal de confirmación</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Seguro que quieres cancelar la compra?
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button id="btn_cancelar_compra" type="button" class="btn btn-danger" data-bs-dismiss="modal">Confirmar</button>
                     </div>
                 </div>
-            </form>
-        </div>
-
+                </div>
+            </div>
+        </form>
     </div>
 @endsection
 
@@ -325,7 +324,7 @@
                                         '<td><input type="hidden" name="arraypreciocompra[]" value="'+precioCompra+'">'+ precioCompra +'</td>' +
                                         '<td><input type="hidden" name="arrayprecioventa[]" value="'+precioVenta+'">'+ precioVenta +'</td>' +
                                         '<td>'+ subtotal[cont] +'</td>' +
-                                        '<td><button class="btn btn-danger" type="button" onClick="eliminarProducto('+cont+')"><i class="fa-regular fa-circle-xmark fs-3 text-white"></i></button></td>' +
+                                        '<td><button class="btn btn-danger btn-sm justify-content-center" type="button" onClick="eliminarProducto('+cont+')"><i class="fa-regular fa-circle-xmark fs-5 text-white"></i></button></td>' +
                                     '</tr>';
 
                         // Acciones despues de añadir la fila

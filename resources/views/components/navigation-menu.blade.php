@@ -50,7 +50,7 @@
                         </div>
                     </nav>
                 </div> --}}
-                <div class="sb-sidenav-menu-heading">Modulos</div>
+                <div class="sb-sidenav-menu-heading">Facturación</div>
                 {{-- Compras --}}
                 @can('ver-compra')
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
@@ -80,6 +80,27 @@
                         </nav>
                     </div>
                 @endcan
+                <div class="sb-sidenav-menu-heading">Personas</div>
+                @can('ver-cliente')
+                    <a class="nav-link" href="{{ route('clientes.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
+                        Clientes
+                    </a>
+                @endcan
+                @can('ver-proveedore')
+                    <a class="nav-link" href="{{ route('proveedores.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fa-solid fa-people-arrows"></i></div>
+                        Proveedores
+                    </a>
+                @endcan
+                @can('ver-user')
+                    <a class="nav-link" href="{{ route('users.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fa-solid fa-user"></i></div>
+                        Usuarios
+                    </a>
+                @endcan
+
+                <div class="sb-sidenav-menu-heading">Modulos</div>
                 @can('ver-categoria')
                     <a class="nav-link" href="{{ route('categorias.index') }}">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-tag"></i></div>
@@ -106,28 +127,7 @@
                         Productos
                     </a>
                 @endcan
-
-                @can('ver-cliente')
-                    <a class="nav-link" href="{{ route('clientes.index') }}">
-                        <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
-                        Clientes
-                    </a>
-                @endcan
-                
-                @can('ver-proveedore')
-                    <a class="nav-link" href="{{ route('proveedores.index') }}">
-                        <div class="sb-nav-link-icon"><i class="fa-solid fa-people-arrows"></i></div>
-                        Proveedores
-                    </a>
-                @endcan
-                    
-                <div class="sb-sidenav-menu-heading">OTROS</div>
-                @can('ver-user')
-                    <a class="nav-link" href="{{ route('users.index') }}">
-                        <div class="sb-nav-link-icon"><i class="fa-solid fa-user"></i></div>
-                        Usuarios
-                    </a>
-                @endcan
+                                
                 @can('ver-role')
                     <a class="nav-link" href="{{ route('roles.index') }}">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-person-circle-plus"></i></div>
